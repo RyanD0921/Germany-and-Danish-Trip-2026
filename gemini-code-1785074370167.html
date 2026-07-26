@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 德北與丹麥夏日之旅 (7/30 - 8/15)</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 圖示 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e3c72;
+            --accent-gold: #f39c12;
+        }
+        body {
+            background-color: #f4f6f9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #333;
+        }
+        .hero-header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2.5rem 1rem 2rem 1rem;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .sticky-nav-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 1020;
+            background: rgba(244, 246, 249, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .filter-btn {
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.4rem 1rem;
+            margin: 0.2rem;
+            transition: all 0.2s ease;
+        }
+        .filter-btn.active {
+            background-color: var(--primary-blue);
+            color: white;
+            box-shadow: 0 2px 8px rgba(30,60,114,0.3);
+        }
+        .section-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.04);
+            border-left: 5px solid var(--primary-blue);
+        }
+        .section-card.denmark {
+            border-left-color: #d9534f;
+        }
+        .day-badge {
+            background-color: #eef2f7;
+            color: var(--primary-blue);
+            font-weight: 700;
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .attraction-box {
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-top: 0.75rem;
+            border: 1px solid #e9ecef;
+        }
+        .food-box {
+            background-color: #fff9f0;
+            border-left: 4px solid var(--accent-gold);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            margin-top: 0.85rem;
+        }
+        .rating-tag {
+            background-color: #fff3cd;
+            color: #856404;
+            font-weight: bold;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+        .btn-map {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 15px;
+        }
+        .table-custom th {
+            background-color: #f1f4f9;
+            color: #1e3c72;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 頁首標題 -->
+    <header class="hero-header text-center">
+        <div class="container">
+            <h1 class="fw-bold mb-2"><i class="fa-solid fa-map-location-dot me-2"></i>2026 德北與丹麥夏日之旅</h1>
+            <p class="lead mb-2 fs-6">Berlin ➔ Hamburg ➔ Copenhagen ➔ Odense ➔ Aarhus ➔ Billund</p>
+            <span class="badge bg-light text-dark px-3 py-2 me-1"><i class="fa-solid fa-calendar me-1"></i>2026/07/30 – 08/15</span>
+            <span class="badge bg-warning text-dark px-3 py-2"><i class="fa-solid fa-clock me-1"></i>17 天跨國完整行程</span>
+        </div>
+    </header>
+
+    <!-- 吸頂分頁與快速過濾欄 -->
+    <div class="sticky-nav-wrapper">
+        <div class="container text-center">
+            <!-- 視圖切換頁籤 -->
+            <ul class="nav nav-pills justify-content-center mb-2" id="mainTab" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active fw-bold" id="itinerary-tab" data-bs-toggle="tab" data-bs-target="#itinerary-view"><i class="fa-solid fa-calendar-days me-1"></i>每日詳細行程</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold" id="food-tab" data-bs-toggle="tab" data-bs-target="#food-view"><i class="fa-solid fa-utensils me-1"></i>美食推薦總覽</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold" id="transport-tab" data-bs-toggle="tab" data-bs-target="#transport-view"><i class="fa-solid fa-plane-train me-1"></i>航班交通</button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link fw-bold" id="hotels-tab" data-bs-toggle="tab" data-bs-target="#hotels-view"><i class="fa-solid fa-hotel me-1"></i>飯店住宿</button>
+                </li>
+            </ul>
+
+            <!-- 城市篩選器 -->
+            <div id="city-filters" class="d-flex flex-wrap justify-content-center gap-1">
+                <button class="btn btn-outline-secondary filter-btn active" data-city="all">全部天數與城市</button>
+                <button class="btn btn-outline-primary filter-btn" data-city="berlin">🇩🇪 柏林 (Berlin)</button>
+                <button class="btn btn-outline-primary filter-btn" data-city="hamburg">🇩🇪 漢堡 (Hamburg)</button>
+                <button class="btn btn-outline-danger filter-btn" data-city="copenhagen">🇩🇰 哥本哈根 (CPH)</button>
+                <button class="btn btn-outline-danger filter-btn" data-city="odense">🇩🇰 歐登塞 (Odense)</button>
+                <button class="btn btn-outline-danger filter-btn" data-city="aarhus">🇩🇰 奧胡斯 (Aarhus)</button>
+                <button class="btn btn-outline-danger filter-btn" data-city="billund">🇩🇰 比隆 (Billund)</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-4">
+        <div class="tab-content" id="mainTabContent">
+
+            <!-- 1. 每日詳細行程視圖 (完整 Day 1 - Day 17) -->
+            <div class="tab-pane fade show active" id="itinerary-view" role="tabpanel">
+
+                <h3 class="fw-bold text-primary mb-3"><i class="fa-solid fa-location-dot me-2"></i>德國篇 (7/30 - 8/08)</h3>
+
+                <!-- Day 1 -->
+                <div class="section-card day-item" data-city="berlin">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 1 | 7/30 (四)</span>
+                        <span class="text-muted"><i class="fa-solid fa-plane me-1"></i>啟程飛往德國</span>
+                    </div>
+                    <h5 class="fw-bold">台北 ➔ 柏林 (TK 25 / TK 1727)</h5>
+                    <p class="text-secondary mb-0">09:50 桃園起飛（伊斯坦堡轉機）➔ 21:10 抵達柏林勃蘭登堡機場 (BER)。搭乘 S-Bahn 前往市區飯店辦理入住。</p>
+                </div>
+
+                <!-- Day 2 -->
+                <div class="section-card day-item" data-city="berlin">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 2 | 7/31 (五)</span>
+                        <span class="text-muted"><i class="fa-solid fa-landmark me-1"></i>柏林經典歷史與權力核心</span>
+                    </div>
+                    <h5 class="fw-bold">國會大廈與布蘭登堡門歷史巡禮</h5>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-building text-primary me-2"></i>德國聯邦議會大廈 (Reichstag)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Reichstag+Building+Berlin" target="_blank" class="btn btn-outline-primary btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">結合古典石造與現代玻璃圓頂，登頂可 360 度俯瞰柏林市區，需預先預約。</p>
+                    </div>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-archway text-primary me-2"></i>布蘭登堡門 (Brandenburger Tor)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Brandenburg+Gate+Berlin" target="_blank" class="btn btn-outline-primary btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">柏林最著名地標，冷戰時期東西柏林分裂與統一的歷史象徵。</p>
+                    </div>
+                    <ul class="text-secondary small mt-2 mb-0">
+                        <li>下午：歐洲被害猶太人紀念碑 ➔ 菩提樹下大街 (Unter den Linden) 漫步 ➔ 洪堡大學</li>
+                        <li>傍晚：御林廣場 (Gendarmenmarkt) 欣賞雙胞胎教堂與音樂廳</li>
+                    </ul>
+                    <div class="food-box">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold"><i class="fa-solid fa-utensils me-2"></i>美食推薦：Curry 36 (咖哩香腸)</span>
+                            <span class="rating-tag"><i class="fa-solid fa-star text-warning me-1"></i>4.3 ★</span>
+                        </div>
+                        <p class="small text-muted mb-1">柏林最代表性的街頭小吃，外酥內嫩香腸搭配特製咖哩醬與薯條。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Curry+36+Mehringdamm+Berlin" target="_blank" class="btn btn-sm btn-warning btn-map"><i class="fa-solid fa-utensils me-1"></i>導航至餐廳</a>
+                    </div>
+                </div>
+
+                <!-- Day 3 -->
+                <div class="section-card day-item" data-city="berlin">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 3 | 8/01 (六)</span>
+                        <span class="text-muted"><i class="fa-solid fa-place-of-worship me-1"></i>博物館島與當代藝術展</span>
+                    </div>
+                    <h5 class="fw-bold">文化瑰寶與近代歷史探訪</h5>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-building-columns text-primary me-2"></i>博物館島 (Museumsinsel)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Museumsinsel+Berlin" target="_blank" class="btn btn-outline-primary btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">世界文化遺產，重點參觀佩加蒙博物館與新博物館（收藏著名的娜芙蒂蒂王后胸像）。</p>
+                    </div>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-palette text-primary me-2"></i>漢堡車站當代藝術館 (Hamburger Bahnhof)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Hamburger+Bahnhof+Berlin" target="_blank" class="btn btn-outline-primary btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">火車站改建的現代藝術館，收藏安迪·沃荷等當代大師作品。</p>
+                    </div>
+                    <ul class="text-secondary small mt-2 mb-0">
+                        <li>下午：柏林大教堂登頂俯瞰市景 ➔ 亞歷山大廣場與柏林電視塔</li>
+                    </ul>
+                    <div class="food-box">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold"><i class="fa-solid fa-utensils me-2"></i>美食推薦：Mustafa's Gemüse Kebap</span>
+                            <span class="rating-tag"><i class="fa-solid fa-star text-warning me-1"></i>4.4 ★</span>
+                        </div>
+                        <p class="small text-muted mb-1">柏林傳奇沙威瑪烤肉餅，烤蔬菜與獨門醬汁完美搭配。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Mustafas+Gemuse+Kebap+Berlin" target="_blank" class="btn btn-sm btn-warning btn-map"><i class="fa-solid fa-utensils me-1"></i>導航至餐廳</a>
+                    </div>
+                </div>
+
+                <!-- Day 4 -->
+                <div class="section-card day-item" data-city="berlin">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 4 | 8/02 (日)</span>
+                        <span class="text-muted"><i class="fa-solid fa-monument me-1"></i>冷戰記憶與冷戰史探討</span>
+                    </div>
+                    <h5 class="fw-bold">冷戰記憶與東西柏林圍牆</h5>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-image text-primary me-2"></i>東邊畫廊 (East Side Gallery)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=East+Side+Gallery+Berlin" target="_blank" class="btn btn-outline-primary btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">保留最長的一段柏林圍牆，繪有經典壁畫《兄弟之吻》。</p>
+                    </div>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-shield-halved text-primary me-2"></i>查理檢查哨 (Checkpoint Charlie)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Checkpoint+Charlie+Berlin" target="_blank" class="btn btn-outline-primary btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">冷戰時期美蘇兩大陣營對峙最前線。</p>
+                    </div>
+                    <ul class="text-secondary small mt-2 mb-0">
+                        <li>下午：恐怖地形圖 (Topography of Terror) 歷史展覽館</li>
+                    </ul>
+                    <div class="food-box">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold"><i class="fa-solid fa-utensils me-2"></i>美食推薦：Burgermeister</span>
+                            <span class="rating-tag"><i class="fa-solid fa-star text-warning me-1"></i>4.5 ★</span>
+                        </div>
+                        <p class="small text-muted mb-1">古蹟公車亭改建的高人氣精緻漢堡店。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Burgermeister+Schlesisches+Tor+Berlin" target="_blank" class="btn btn-sm btn-warning btn-map"><i class="fa-solid fa-utensils me-1"></i>導航至餐廳</a>
+                    </div>
+                </div>
+
+                <!-- Day 5 -->
+                <div class="section-card day-item" data-city="berlin">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 5 | 8/03 (一)</span>
+                        <span class="text-muted"><i class="fa-solid fa-tree me-1"></i>波茨坦皇家園林一日遊</span>
+                    </div>
+                    <h5 class="fw-bold">波茨坦無憂宮與歷史特區</h5>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-crown text-primary me-2"></i>無憂宮 (Schloss Sanssouci)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Sanssouci+Palace+Potsdam" target="_blank" class="btn btn-outline-primary btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">腓特烈大帝夏宮，擁有宏偉的梯田葡萄園與巴洛克建築。</p>
+                    </div>
+                    <ul class="text-secondary small mt-2 mb-0">
+                        <li>下午：西齊利恩霍夫宮 (Schloss Cecilienhof) 參觀波茨坦會議原址 ➔ 荷蘭區散步</li>
+                        <li>傍晚：返回柏林市區，選帝侯大道 (Ku'damm) 逛街</li>
+                    </ul>
+                </div>
+
+                <!-- Day 6 -->
+                <div class="section-card day-item" data-city="berlin">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 6 | 8/04 (二)</span>
+                        <span class="text-muted"><i class="fa-solid fa-bag-shopping me-1"></i>現代柏林生活體驗</span>
+                    </div>
+                    <h5 class="fw-bold">宮殿建築與現代文創園區</h5>
+                    <ul class="text-secondary small mb-0">
+                        <li>上午：夏洛滕堡宮 (Schloss Charlottenburg) 巴洛克宮殿與花園</li>
+                        <li>下午：庭院文創區 (Hackesche Höfe) 探索特色小店與設計工作室</li>
+                        <li>傍晚：整理行李，準備明日搭車轉移至漢堡</li>
+                    </ul>
+                </div>
+
+                <!-- Day 7 -->
+                <div class="section-card day-item" data-city="hamburg">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 7 | 8/05 (三)</span>
+                        <span class="text-muted"><i class="fa-solid fa-train me-1"></i>移防漢堡 & 微縮世界</span>
+                    </div>
+                    <h5 class="fw-bold">柏林 ➔ 漢堡（德鐵 ICE 2593）</h5>
+                    <p class="text-secondary mb-2">14:34 柏林中央車站搭乘 ICE ➔ 16:44 抵達漢堡中央車站，入住飯店。</p>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-train-subway text-primary me-2"></i>19:30 預約參觀：漢堡微縮景觀世界 (Miniatur Wunderland)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Miniatur+Wunderland+Hamburg" target="_blank" class="btn btn-outline-primary btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">全球最大動態鐵道模型博物館，擁有飛機可起降的精細機場。</p>
+                    </div>
+                    <div class="food-box">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold"><i class="fa-solid fa-utensils me-2"></i>美食推薦：Hofbräu Wirtshaus Speersort</span>
+                            <span class="rating-tag"><i class="fa-solid fa-star text-warning me-1"></i>4.3 ★</span>
+                        </div>
+                        <p class="small text-muted mb-1">道地巴伐利亞烤豬腳與黑啤酒。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Hofbrau+Wirtshaus+Speersort+Hamburg" target="_blank" class="btn btn-sm btn-warning btn-map"><i class="fa-solid fa-utensils me-1"></i>導航至餐廳</a>
+                    </div>
+                </div>
+
+                <!-- Day 8 -->
+                <div class="section-card day-item" data-city="hamburg">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 8 | 8/06 (四)</span>
+                        <span class="text-muted"><i class="fa-solid fa-water me-1"></i>港都漢堡建築風華</span>
+                    </div>
+                    <h5 class="fw-bold">倉庫城與易北愛樂廳</h5>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-city text-primary me-2"></i>倉庫城 (Speicherstadt)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Speicherstadt+Hamburg" target="_blank" class="btn btn-outline-primary btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">世界最大哥德復興式紅磚倉庫區，運河交錯景緻壯觀。</p>
+                    </div>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-music text-primary me-2"></i>易北愛樂廳 (Elbphilharmonie)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Elbphilharmonie+Hamburg" target="_blank" class="btn btn-outline-primary btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">漢堡新地標，免費登頂觀景台俯瞰漢堡港區夕陽。</p>
+                    </div>
+                    <ul class="text-secondary small mt-2 mb-0">
+                        <li>上午：漢堡市政廳 (Rathaus) & 阿爾斯特湖 (Alster) 散步</li>
+                    </ul>
+                </div>
+
+                <!-- Day 9 -->
+                <div class="section-card day-item" data-city="hamburg">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 9 | 8/07 (五)</span>
+                        <span class="text-muted"><i class="fa-solid fa-ship me-1"></i>漢堡港與舊易北河隧道</span>
+                    </div>
+                    <h5 class="fw-bold">港區巡禮與海底隧道體驗</h5>
+                    <ul class="text-secondary small mb-2">
+                        <li>上午：St. Pauli 碼頭搭乘遊船巡賞漢堡大型貨櫃港口</li>
+                        <li>下午：步行穿越歷史悠久的舊易北河隧道 (Alter Elbtunnel) 前往對岸展望點</li>
+                        <li>傍晚：聖米迦勒教堂 (St. Michaelis) 登頂看夜景</li>
+                    </ul>
+                    <div class="food-box">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold"><i class="fa-solid fa-utensils me-2"></i>美食推薦：Brücke 10</span>
+                            <span class="rating-tag"><i class="fa-solid fa-star text-warning me-1"></i>4.5 ★</span>
+                        </div>
+                        <p class="small text-muted mb-1">碼頭邊最道地新鮮的北海小蝦堡 (Krabbenbrötchen)。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Brucke+10+Hamburg" target="_blank" class="btn btn-sm btn-warning btn-map"><i class="fa-solid fa-utensils me-1"></i>導航至餐廳</a>
+                    </div>
+                </div>
+
+                <h3 class="fw-bold text-danger mt-5 mb-3"><i class="fa-solid fa-location-dot me-2"></i>丹麥篇 (8/08 - 8/15)</h3>
+
+                <!-- Day 10 -->
+                <div class="section-card denmark day-item" data-city="copenhagen">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 10 | 8/08 (六)</span>
+                        <span class="text-muted"><i class="fa-solid fa-plane me-1"></i>跨國飛行至哥本哈根</span>
+                    </div>
+                    <h5 class="fw-bold">漢堡 ➔ 哥本哈根 (SK 0650)</h5>
+                    <p class="text-secondary mb-0">15:20 HAM 起飛 ➔ 16:20 抵達 CPH。入住 a&o Copenhagen Sydhavn，前往鄰近 Supermarco 大型超市體驗在地生活。</p>
+                </div>
+
+                <!-- Day 11 -->
+                <div class="section-card denmark day-item" data-city="copenhagen">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 11 | 8/09 (日)</span>
+                        <span class="text-muted"><i class="fa-solid fa-camera me-1"></i>哥本哈根經典標誌</span>
+                    </div>
+                    <h5 class="fw-bold">新港彩色屋與運河巡禮</h5>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-house-chimney-window text-danger me-2"></i>新港 (Nyhavn)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=Nyhavn+Copenhagen" target="_blank" class="btn btn-outline-danger btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">明信片經典彩虹小屋，搭乘運河遊船的最佳起點。</p>
+                    </div>
+                    <ul class="text-secondary small mt-2 mb-0">
+                        <li>下午：美人魚雕像 (Little Mermaid) ➔ 阿馬林堡宮 (Amalienborg) 衛兵交接</li>
+                        <li>傍晚：Strøget 斯托里步行街逛街</li>
+                    </ul>
+                    <div class="food-box">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold"><i class="fa-solid fa-utensils me-2"></i>美食推薦：Torvehallerne KBH 市集</span>
+                            <span class="rating-tag"><i class="fa-solid fa-star text-warning me-1"></i>4.5 ★</span>
+                        </div>
+                        <p class="small text-muted mb-1">品嚐精緻丹麥開放式三明治 (Smørrebrød)。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Torvehallerne+Copenhagen" target="_blank" class="btn btn-sm btn-warning btn-map"><i class="fa-solid fa-utensils me-1"></i>導航至餐廳</a>
+                    </div>
+                </div>
+
+                <!-- Day 12 -->
+                <div class="section-card denmark day-item" data-city="odense">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 12 | 8/10 (一)</span>
+                        <span class="text-muted"><i class="fa-solid fa-book-open me-1"></i>童話大師安徒生的故鄉</span>
+                    </div>
+                    <h5 class="fw-bold">哥本哈根 ➔ 歐登塞 (Odense)</h5>
+                    <p class="text-secondary mb-2">10:27 搭乘 DSB 火車 ➔ 12:03 抵達歐登塞，入住 Milling Hotel Plaza。</p>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-book-bookmark text-danger me-2"></i>14:00 預約參觀：安徒生博物館 (H.C. Andersens Hus)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=H.C.+Andersens+Hus+Odense" target="_blank" class="btn btn-outline-danger btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">隈研吾設計的沉浸式童話展館與景觀花園。</p>
+                    </div>
+                    <div class="food-box">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold"><i class="fa-solid fa-utensils me-2"></i>美食推薦：Storms Pakhus 美食廣場</span>
+                            <span class="rating-tag"><i class="fa-solid fa-star text-warning me-1"></i>4.5 ★</span>
+                        </div>
+                        <p class="small text-muted mb-1">舊倉庫改建的室內美食市集。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=Storms+Pakhus+Odense" target="_blank" class="btn btn-sm btn-warning btn-map"><i class="fa-solid fa-utensils me-1"></i>導航至餐廳</a>
+                    </div>
+                </div>
+
+                <!-- Day 13 -->
+                <div class="section-card denmark day-item" data-city="aarhus">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 13 | 8/11 (二)</span>
+                        <span class="text-muted"><i class="fa-solid fa-palette me-1"></i>藝術與彩虹天橋</span>
+                    </div>
+                    <h5 class="fw-bold">歐登塞 ➔ 奧胡斯 (Aarhus)</h5>
+                    <p class="text-secondary mb-2">10:06 搭乘 DSB 火車 ➔ 11:38 抵達奧胡斯，入住 Wakeup - Aarhus。</p>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-icons text-danger me-2"></i>ARoS 奧胡斯藝術博物館</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=ARoS+Aarhus+Art+Museum" target="_blank" class="btn btn-outline-danger btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">頂樓擁有知名彩虹環形天橋 (Your Rainbow Panorama)。</p>
+                    </div>
+                    <ul class="text-secondary small mt-2 mb-0">
+                        <li>傍晚：老城露天博物館 (Den Gamle By) 體驗舊時丹麥建築風采</li>
+                    </ul>
+                </div>
+
+                <!-- Day 14 -->
+                <div class="section-card denmark day-item" data-city="billund">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 14 | 8/12 (三)</span>
+                        <span class="text-muted"><i class="fa-solid fa-cubes me-1"></i>樂高創意發源地</span>
+                    </div>
+                    <h5 class="fw-bold">奧胡斯 ➔ 比隆 (Billund)</h5>
+                    <p class="text-secondary mb-2">10:38 火車轉 43 號公車 ➔ 12:09 抵達比隆，入住 Airport Hotel, Billund。</p>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-puzzle-piece text-danger me-2"></i>預約參觀：LEGO House (樂高體驗之家)</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=LEGO+House+Billund" target="_blank" class="btn btn-outline-danger btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">積木創意聖殿，體驗數位與樂高創意的結合。</p>
+                    </div>
+                    <div class="food-box">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="fw-bold"><i class="fa-solid fa-robot me-2"></i>美食推薦：MINI CHEF (LEGO House 內)</span>
+                            <span class="rating-tag"><i class="fa-solid fa-star text-warning me-1"></i>4.5 ★</span>
+                        </div>
+                        <p class="small text-muted mb-1">樂高積木點餐與機器人送餐的特色餐廳。</p>
+                        <a href="https://www.google.com/maps/search/?api=1&query=MINI+CHEF+LEGO+House+Billund" target="_blank" class="btn btn-sm btn-warning btn-map"><i class="fa-solid fa-utensils me-1"></i>導航至餐廳</a>
+                    </div>
+                </div>
+
+                <!-- Day 15 -->
+                <div class="section-card denmark day-item" data-city="billund">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 15 | 8/13 (四)</span>
+                        <span class="text-muted"><i class="fa-solid fa-child me-1"></i>童心未泯樂高園區</span>
+                    </div>
+                    <h5 class="fw-bold">樂高樂園 ➔ 返回哥本哈根</h5>
+                    <div class="attraction-box mb-2">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <h6 class="fw-bold mb-0"><i class="fa-solid fa-ticket text-danger me-2"></i>LEGOLAND Billund 樂高樂園</h6>
+                            <a href="https://www.google.com/maps/search/?api=1&query=LEGOLAND+Billund" target="_blank" class="btn btn-outline-danger btn-map"><i class="fa-solid fa-location-arrow me-1"></i>導航</a>
+                        </div>
+                        <p class="small text-secondary mb-0">全球首座樂高樂園，重溫經典主題區。</p>
+                    </div>
+                    <p class="text-secondary small mb-0">17:25 搭乘 43 號公車至 Vejle 轉乘 DSB 火車 ➔ 20:32 返抵哥本哈根，入住 Andersen Boutique Hotel。</p>
+                </div>
+
+                <!-- Day 16 -->
+                <div class="section-card denmark day-item" data-city="copenhagen">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 16 | 8/14 (五)</span>
+                        <span class="text-muted"><i class="fa-solid fa-plane-departure me-1"></i>哥本哈根最後採買與返航</span>
+                    </div>
+                    <h5 class="fw-bold">哥本哈根 ➔ 台北 (TK 1786 / TK 24)</h5>
+                    <ul class="text-secondary small mb-2">
+                        <li>上午：玫瑰堡 (Rosenborg Castle) 看皇家珠寶 ➔ 圓塔 (Round Tower) 登頂俯瞰古城</li>
+                        <li>下午：前往哥本哈根機場 (CPH) 辦理退稅與登機手續</li>
+                        <li>19:15 班機起飛（伊斯坦堡轉機）</li>
+                    </ul>
+                </div>
+
+                <!-- Day 17 -->
+                <div class="section-card denmark day-item" data-city="copenhagen">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="day-badge">Day 17 | 8/15 (六)</span>
+                        <span class="text-muted"><i class="fa-solid fa-house me-1"></i>平安抵家</span>
+                    </div>
+                    <h5 class="fw-bold">抵達桃園國際機場 (TPE)</h5>
+                    <p class="text-secondary mb-0">17:55 班機順利降落桃園機場，結束美好的 17 天德北丹麥夏日之旅！</p>
+                </div>
+
+            </div>
+
+            <!-- 2. 精選美食總覽視圖 -->
+            <div class="tab-pane fade" id="food-view" role="tabpanel">
+                <div class="section-card">
+                    <h4 class="fw-bold mb-3"><i class="fa-solid fa-utensils text-warning me-2"></i>旅程嚴選餐廳與美食導航</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle table-custom">
+                            <thead>
+                                <tr>
+                                    <th>城市</th>
+                                    <th>餐廳 / 美食名稱</th>
+                                    <th>特色介紹</th>
+                                    <th>Google 評分</th>
+                                    <th>導航</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>柏林</td>
+                                    <td><strong>Mustafa's Gemüse Kebap</strong></td>
+                                    <td>柏林最紅沙威瑪烤肉餅，烤蔬菜與特製醬料。</td>
+                                    <td><span class="rating-tag">4.4 ★</span></td>
+                                    <td><a href="https://www.google.com/maps/search/?api=1&query=Mustafas+Gemuse+Kebap+Berlin" target="_blank" class="btn btn-sm btn-outline-primary btn-map">地圖</a></td>
+                                </tr>
+                                <tr>
+                                    <td>柏林</td>
+                                    <td><strong>Burgermeister</strong></td>
+                                    <td>百年古蹟改建的高人氣精緻漢堡店。</td>
+                                    <td><span class="rating-tag">4.5 ★</span></td>
+                                    <td><a href="https://www.google.com/maps/search/?api=1&query=Burgermeister+Schlesisches+Tor+Berlin" target="_blank" class="btn btn-sm btn-outline-primary btn-map">地圖</a></td>
+                                </tr>
+                                <tr>
+                                    <td>漢堡</td>
+                                    <td><strong>Hofbräu Wirtshaus Speersort</strong></td>
+                                    <td>正宗巴伐利亞烤豬腳與啤酒。</td>
+                                    <td><span class="rating-tag">4.3 ★</span></td>
+                                    <td><a href="https://www.google.com/maps/search/?api=1&query=Hofbrau+Wirtshaus+Speersort+Hamburg" target="_blank" class="btn btn-sm btn-outline-primary btn-map">地圖</a></td>
+                                </tr>
+                                <tr>
+                                    <td>漢堡</td>
+                                    <td><strong>Brücke 10</strong></td>
+                                    <td>漢堡港口最道地新鮮的北海鮮蝦堡。</td>
+                                    <td><span class="rating-tag">4.5 ★</span></td>
+                                    <td><a href="https://www.google.com/maps/search/?api=1&query=Brucke+10+Hamburg" target="_blank" class="btn btn-sm btn-outline-primary btn-map">地圖</a></td>
+                                </tr>
+                                <tr>
+                                    <td>哥本哈根</td>
+                                    <td><strong>Torvehallerne KBH</strong></td>
+                                    <td>精緻美食集市，必吃丹麥開放式三明治。</td>
+                                    <td><span class="rating-tag">4.5 ★</span></td>
+                                    <td><a href="https://www.google.com/maps/search/?api=1&query=Torvehallerne+Copenhagen" target="_blank" class="btn btn-sm btn-outline-primary btn-map">地圖</a></td>
+                                </tr>
+                                <tr>
+                                    <td>歐登塞</td>
+                                    <td><strong>Storms Pakhus</strong></td>
+                                    <td>舊倉庫 Street Food 市集，氛圍輕鬆活潑。</td>
+                                    <td><span class="rating-tag">4.5 ★</span></td>
+                                    <td><a href="https://www.google.com/maps/search/?api=1&query=Storms+Pakhus+Odense" target="_blank" class="btn btn-sm btn-outline-primary btn-map">地圖</a></td>
+                                </tr>
+                                <tr>
+                                    <td>比隆</td>
+                                    <td><strong>MINI CHEF (LEGO House)</strong></td>
+                                    <td>機器人送餐與積木點餐的獨家樂高主題餐廳。</td>
+                                    <td><span class="rating-tag">4.5 ★</span></td>
+                                    <td><a href="https://www.google.com/maps/search/?api=1&query=MINI+CHEF+LEGO+House+Billund" target="_blank" class="btn btn-sm btn-outline-primary btn-map">地圖</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. 航班與跨國鐵路視圖 (完整回復) -->
+            <div class="tab-pane fade" id="transport-view" role="tabpanel">
+                <div class="section-card">
+                    <h4 class="fw-bold mb-3"><i class="fa-solid fa-plane text-primary me-2"></i>航班資訊</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle table-custom">
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>航段 / 航班</th>
+                                    <th>起飛時間 ➔ 抵達時間</th>
+                                    <th>備註</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>7/30 (四)</td>
+                                    <td>去程：TPE ➔ BER (土耳其航空)</td>
+                                    <td>09:50 ➔ 21:10</td>
+                                    <td>桃園 T2 ➔ 柏林勃蘭登堡機場 BER</td>
+                                </tr>
+                                <tr>
+                                    <td>8/08 (六)</td>
+                                    <td>區域航班：HAM ➔ CPH (北歐航空 SK 0650)</td>
+                                    <td>15:20 ➔ 16:20</td>
+                                    <td>漢堡 T2 ➔ 哥本哈根 CPH T3</td>
+                                </tr>
+                                <tr>
+                                    <td>8/14 (五)</td>
+                                    <td>回程：CPH ➔ TPE (土耳其航空)</td>
+                                    <td>19:15 ➔ 17:55 (+1)</td>
+                                    <td>哥本哈根 CPH T2 ➔ 桃園 T2 (8/15 抵達)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <h5 class="text-secondary fw-bold mt-4">跨城與重點鐵道交通</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle table-custom">
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>路線 / 車次</th>
+                                    <th>時間</th>
+                                    <th>注意事項</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>8/05 (三)</td>
+                                    <td>德鐵 ICE 2593 (柏林 ➔ 漢堡)</td>
+                                    <td>14:34 - 16:44</td>
+                                    <td>建議預先劃位行李架附近座位</td>
+                                </tr>
+                                <tr>
+                                    <td>8/10 (一)</td>
+                                    <td>丹麥國鐵 DSB (哥本哈根 ➔ 歐登塞)</td>
+                                    <td>10:27 - 12:03</td>
+                                    <td>抵達後先於車站寄放行李</td>
+                                </tr>
+                                <tr>
+                                    <td>8/11 (二)</td>
+                                    <td>丹麥國鐵 DSB (歐登塞 ➔ 奧胡斯)</td>
+                                    <td>10:06 - 11:38</td>
+                                    <td>直達班車</td>
+                                </tr>
+                                <tr>
+                                    <td>8/12 (三)</td>
+                                    <td>DSB 火車 + 43 號公車 (奧胡斯 ➔ 比隆)</td>
+                                    <td>10:38 - 12:09</td>
+                                    <td>建議事先預買回程 43 號公車票</td>
+                                </tr>
+                                <tr>
+                                    <td>8/13 (四)</td>
+                                    <td>43 號公車 + DSB ICL 50058 (比隆 ➔ Vejle ➔ 哥本哈根)</td>
+                                    <td>17:25 - 20:32</td>
+                                    <td>返回哥本哈根入住飯店</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. 飯店住宿清單 (完整回復) -->
+            <div class="tab-pane fade" id="hotels-view" role="tabpanel">
+                <div class="section-card">
+                    <h4 class="fw-bold mb-3"><i class="fa-solid fa-hotel text-primary me-2"></i>全程住宿清單</h4>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle table-custom">
+                            <thead>
+                                <tr>
+                                    <th>城市</th>
+                                    <th>入住日期</th>
+                                    <th>飯店名稱</th>
+                                    <th>備註 / 狀態</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>柏林</td>
+                                    <td>7/30 – 8/05 (6晚)</td>
+                                    <td>柏林市區精選飯店 / 公寓</td>
+                                    <td>鄰近 S-Bahn / 地鐵站</td>
+                                </tr>
+                                <tr>
+                                    <td>漢堡</td>
+                                    <td>8/05 – 8/08 (3晚)</td>
+                                    <td>漢堡中央車站附近飯店</td>
+                                    <td>方便往返機場與港區</td>
+                                </tr>
+                                <tr>
+                                    <td>哥本哈根 (首訪)</td>
+                                    <td>8/08 – 8/10 (2晚)</td>
+                                    <td>a&o Copenhagen Sydhavn</td>
+                                    <td>已預訂 / Supermarco 超市旁</td>
+                                </tr>
+                                <tr>
+                                    <td>歐登塞</td>
+                                    <td>8/10 – 8/11 (1晚)</td>
+                                    <td>Milling Hotel Plaza</td>
+                                    <td>已預訂 / 近古城區與車站</td>
+                                </tr>
+                                <tr>
+                                    <td>奧胡斯</td>
+                                    <td>8/11 – 8/12 (1晚)</td>
+                                    <td>Wakeup - Aarhus</td>
+                                    <td>已預訂 / 近 ARoS 美術館</td>
+                                </tr>
+                                <tr>
+                                    <td>比隆</td>
+                                    <td>8/12 – 8/13 (1晚)</td>
+                                    <td>Airport Hotel, Billund</td>
+                                    <td>已預訂 / 近樂高樂園與機場</td>
+                                </tr>
+                                <tr>
+                                    <td>哥本哈根 (二訪)</td>
+                                    <td>8/13 – 8/14 (1晚)</td>
+                                    <td>Andersen Boutique Hotel</td>
+                                    <td>已預訂 / 鄰近中央車站方便搭車前往機場</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 城市過濾腳本 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const filterBtns = document.querySelectorAll(".filter-btn");
+            const dayItems = document.querySelectorAll(".day-item");
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener("click", function() {
+                    filterBtns.forEach(b => b.classList.remove("active"));
+                    this.classList.add("active");
+
+                    const selectedCity = this.getAttribute("data-city");
+
+                    dayItems.forEach(item => {
+                        if (selectedCity === "all" || item.getAttribute("data-city") === selectedCity) {
+                            item.style.display = "block";
+                        } else {
+                            item.style.display = "none";
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
